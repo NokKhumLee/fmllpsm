@@ -1,0 +1,43 @@
+
+[build-system]
+requires = ["uv_build>=0.9.26,<0.10.0"]
+build-backend = "uv_build"
+
+[project]
+name = "fmllpsm"
+version = "0.1.0"
+description = "A foundational model based for low-level representation similarity metrics"
+readme = "README.md"
+authors = [
+    { name = "chogerlate", email = "siwaratlaopromger4444@gmail.com" }
+]
+license = "BSD-2-Clause"
+keywords = ["IQA", "LPIPS", "DINO", "Computer Vision", "Perceptual Metric"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "open-clip-torch>=3.2.0",
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "transformers>=4.30.0",
+    "numpy>=1.24.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/chogerlate/fmllpsm"
+"Bug Tracker" = "https://github.com/chogerlate/fmllpsm/issues"
+
+[[tool.uv.index]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu118", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }
+torchvision = { index = "pytorch-cu118", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }
+torchaudio = { index = "pytorch-cu118", marker = "sys_platform == 'linux' or sys_platform == 'win32'" }
