@@ -14,10 +14,13 @@ class DINOv1Extractor(nn.Module):
         # Default to capturing features every 3 layers if not specified
         self.layer_indices = layer_indices or [2, 5, 8, 11]
         
-        # Freeze the backbone for efficiency during research/inference
         for param in self.model.parameters():
             param.requires_grad = False
         self.model.eval()
+        
+        # Enable gradient checkpointing to save VRAM by recomputing activations 
+        # during the backward pass (essential for high-res 3DGS training)
+        self.model.gradient_checkpointing_enable()
 
     def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
         # x: (N, C, H, W)
