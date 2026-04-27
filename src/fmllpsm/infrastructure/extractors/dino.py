@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from typing import List, Optional
 from transformers import ViTModel
 from fmllpsm.domain.interfaces import FeatureExtractor
 
@@ -8,7 +7,7 @@ class DINOv1Extractor(nn.Module):
     """
     Extracts features from DINOv1 (ViT-base) using the Transformers library.
     """
-    def __init__(self, model_name: str = 'facebook/dino-vitb16', layer_indices: Optional[List[int]] = None):
+    def __init__(self, model_name: str = 'facebook/dino-vitb16', layer_indices: list[int] | None = None):
         super().__init__()
         self.model = ViTModel.from_pretrained(model_name)
         # Default to capturing features every 3 layers if not specified
@@ -22,7 +21,7 @@ class DINOv1Extractor(nn.Module):
         # during the backward pass (essential for high-res 3DGS training)
         self.model.gradient_checkpointing_enable()
 
-    def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
+    def forward(self, x: torch.Tensor) -> list[torch.Tensor]:
         # x: (N, C, H, W)
         outputs = self.model(x, output_hidden_states=True)
         # hidden_states: tuple of (initial_embeddings, layer_1, ..., layer_n)
@@ -38,5 +37,5 @@ class DINOv1Extractor(nn.Module):
             
         return features
 
-    def __call__(self, x: torch.Tensor) -> List[torch.Tensor]:
+    def __call__(self, x: torch.Tensor) -> list[torch.Tensor]:
         return self.forward(x)

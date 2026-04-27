@@ -11,7 +11,7 @@ class FMLLPSM(nn.Module):
     High-level facade for the Foundational Model Low-Level Perceptual Similarity Metric.
     """
 
-    def __init__(self, model_type: str = "DINOv1", device: str = None):
+    def __init__(self, model_type: str = "DINOv1", device: str | None = None):
         super().__init__()
         if device is None:
             self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -36,6 +36,15 @@ class FMLLPSM(nn.Module):
             )
         else:
             raise ValueError(f"Unsupported model type: {model_type}")
+
+    def compile(self, **kwargs):
+        """
+        Optimizes the model using torch.compile (requires PyTorch 2.0+).
+        Recommended for training loops to improve performance.
+        """
+        self.extractor = torch.compile(self.extractor, **kwargs)
+        self.metric = torch.compile(self.metric, **kwargs)
+        return self
 
     def forward(self, ref: torch.Tensor, dis: torch.Tensor) -> torch.Tensor:
         """

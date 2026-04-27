@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from typing import List
 from fmllpsm.domain.interfaces import SimilarityMetric
 
 class LearnedMetric(nn.Module):
@@ -8,7 +7,7 @@ class LearnedMetric(nn.Module):
     LPIPS-style learned distance. Calculates:
     sum_l ( weight_l * mean_spatial ( (ref_l - dis_l)^2 ) )
     """
-    def __init__(self, channels_list: List[int]):
+    def __init__(self, channels_list: list[int]):
         super().__init__()
         # Linear layers to map features to a scalar relevance score per spatial location
         self.lin_layers = nn.ModuleList([
@@ -22,7 +21,7 @@ class LearnedMetric(nn.Module):
         norm_factor = torch.sqrt(torch.sum(x**2, dim=-1, keepdim=True) + eps)
         return x / norm_factor
 
-    def forward(self, ref_feats: List[torch.Tensor], dis_feats: List[torch.Tensor]) -> torch.Tensor:
+    def forward(self, ref_feats: list[torch.Tensor], dis_feats: list[torch.Tensor]) -> torch.Tensor:
         total_dist = 0.0
         
         for i, (ref, dis) in enumerate(zip(ref_feats, dis_feats)):
@@ -40,5 +39,5 @@ class LearnedMetric(nn.Module):
             
         return total_dist
 
-    def __call__(self, ref_feats: List[torch.Tensor], dis_feats: List[torch.Tensor]) -> torch.Tensor:
+    def __call__(self, ref_feats: list[torch.Tensor], dis_feats: list[torch.Tensor]) -> torch.Tensor:
         return self.forward(ref_feats, dis_feats)

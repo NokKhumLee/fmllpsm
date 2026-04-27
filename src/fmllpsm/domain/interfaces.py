@@ -1,4 +1,4 @@
-from typing import List, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 import torch
 
 @runtime_checkable
@@ -6,7 +6,7 @@ class FeatureExtractor(Protocol):
     """
     Interface for Feature Extractors.
     """
-    def __call__(self, x: torch.Tensor) -> List[torch.Tensor]:
+    def __call__(self, x: torch.Tensor) -> list[torch.Tensor]:
         """
         Returns a list of feature maps from different layers.
         """
@@ -17,7 +17,7 @@ class SimilarityMetric(Protocol):
     """
     Interface for distance calculation methodologies.
     """
-    def __call__(self, ref_feats: List[torch.Tensor], dis_feats: List[torch.Tensor]) -> torch.Tensor:
+    def __call__(self, ref_feats: list[torch.Tensor], dis_feats: list[torch.Tensor]) -> torch.Tensor:
         """
         Calculates similarity scores between reference and distorted features.
         """
